@@ -3,7 +3,7 @@
  *
  */
 
-namespace Frootbox\MVC\Persitence\Entities\Interfaces;
+namespace Frootbox\MVC\Persistence\Entities\Interfaces;
 
 interface UserInterface
 {
