@@ -16,6 +16,10 @@ class View
         protected \DI\Container $container,
     )
     {
+        if (!file_exists(CORE_DIR . 'view/')) {
+            throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . CORE_DIR . 'view/');
+        }
+
         $loader = new \Twig\Loader\FilesystemLoader([
             CORE_DIR, CORE_DIR . 'view/'
         ]);
@@ -25,6 +29,14 @@ class View
         ]);
     }
 
+    /**
+     * 
+     */
+    public function addFilter(\Twig\TwigFilter $filter): void
+    {
+        $this->twig->addFilter($filter);
+    }
+    
     /**
      *
      */

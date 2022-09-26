@@ -9,6 +9,7 @@ class Dispatcher
 {
     protected $namespace;
     protected $cachepath;
+    protected $baseDir = null;
     protected $container;
 
     /**
@@ -22,6 +23,10 @@ class Dispatcher
 
         if (!empty($options['cachepath'])) {
             $this->cachepath = $options['cachepath'];
+        }
+
+        if (!empty($options['baseDir'])) {
+            $this->baseDir = $options['baseDir'];
         }
 
         $this->container = $container;
@@ -97,8 +102,6 @@ class Dispatcher
             $source = "<?php\n/**\n * @generated\n */\n\nreturn " . var_export($config, true) . ";\n";
 
             file_put_contents($path, $source);
-
-            $config = require $path;
         }
 
         return $config[$key];
@@ -112,6 +115,10 @@ class Dispatcher
         // Extract request
         if ($_SERVER['SCRIPT_NAME'] != '/index.php') {
             $request = str_replace(substr($_SERVER['SCRIPT_NAME'], 0, -9), '', $_SERVER['REQUEST_URI']);
+
+            if (!empty($this->baseDir)) {
+                $request = str_replace('/' . trim($this->baseDir, '/') . '/', '', $request);
+            }
         }
         else {
             $request = trim($_SERVER['REQUEST_URI'], '/');

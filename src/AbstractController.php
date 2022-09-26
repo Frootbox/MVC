@@ -107,6 +107,10 @@ abstract class AbstractController
         $uri = SERVER_PATH . $controller . '/' . $action;
 
         if (!empty($payload)) {
+            $payload = array_filter($payload);
+        }
+
+        if (!empty($payload)) {
             $uri .= '?' . http_build_query($payload);
         }
 
