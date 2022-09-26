@@ -18,7 +18,7 @@ class Session
     /**
      *
      */
-    public function login(\Frootbox\MVC\Persitence\Entities\Interfaces\UserInterface $user): void
+    public function login(\Frootbox\MVC\Persistence\Entities\Interfaces\UserInterface $user): void
     {
         $_SESSION['userId'] = $user->getId();
     }
