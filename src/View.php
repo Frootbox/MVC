@@ -16,12 +16,12 @@ class View
         protected \DI\Container $container,
     )
     {
-        if (!file_exists(CORE_DIR . 'view/')) {
+        if (!file_exists(CORE_DIR . 'resources/private/views/')) {
             throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . CORE_DIR . 'view/');
         }
 
         $loader = new \Twig\Loader\FilesystemLoader([
-            CORE_DIR, CORE_DIR . 'view/'
+            CORE_DIR, CORE_DIR . 'resources/private/views/'
         ]);
 
         $this->twig = new \Twig\Environment($loader, [
