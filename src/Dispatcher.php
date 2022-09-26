@@ -81,6 +81,10 @@ class Dispatcher
                 }
             }
 
+            if (preg_match('#@userlevel (.*?)\n#is', $comment, $match)) {
+                $controllerConfig['userlevel'] = $match[1];
+            }
+
             foreach ($reflectionClass->getMethods() as $method) {
 
                 if (substr($method->getName(), -6) != 'Action') {
@@ -171,6 +175,17 @@ class Dispatcher
                 $controller = new $controllerClass;
                 $controller->setContainer($this->container);
                 $controller->setAction('login');
+
+                return $controller;
+            }
+        }
+
+        if (!empty($controllerCache['userlevel'])) {
+
+            $user = $this->container->get(\HandwerkConnected\Persistence\Entity\User::class);
+
+            if (!preg_match('#' . $controllerCache['userlevel'] . '#', $user->getAccess())) {
+                throw new \Frootbox\Exceptions\AccessDenied();
             }
         }
 
