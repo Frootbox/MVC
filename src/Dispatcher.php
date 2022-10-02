@@ -44,6 +44,100 @@ class Dispatcher
     /**
      *
      */
+    protected function buildControllerCache(): void
+    {
+
+        function getDirContents($dir, &$results = array()) {
+            $files = scandir($dir);
+
+            foreach ($files as $key => $value) {
+
+                $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+
+                if (!is_dir($path)) {
+                    if ($value == 'Controller.php') {
+                        $results[] = $path;
+                    }
+                }
+                else if ($value != "." && $value != "..") {
+                    getDirContents($path, $results);
+                }
+            }
+
+            return $results;
+        }
+
+        $controllerFiles = getDirContents(CORE_DIR . 'src/Controller');
+        $config = [];
+
+        foreach ($controllerFiles as $file) {
+
+            $path = str_replace('/', '\\', substr(str_replace(CORE_DIR . 'src/Controller/', '', $file), 0, -15));
+
+            $class = '\\' . $this->namespace . '\\Controller\\' . $path . '\\Controller';
+
+            $controllerConfig = [
+                'timestamp' => $_SERVER['REQUEST_TIME'],
+                'access' => 'Private',
+            ];
+
+            $reflectionClass = new \ReflectionClass($class);
+            $comment = $reflectionClass->getDocComment();
+
+            if (preg_match('#@access (.*?)\n#is', $comment, $match)) {
+
+                if ($match[1] == 'Public') {
+                    $controllerConfig['access'] = 'Public';
+                }
+            }
+
+            if (preg_match('#@userlevel (.*?)\n#is', $comment, $match)) {
+                $controllerConfig['userlevel'] = $match[1];
+            }
+
+            foreach ($reflectionClass->getMethods() as $method) {
+
+                if (substr($method->getName(), -6) != 'Action') {
+                    continue;
+                }
+
+                $comment = $method->getDocComment();
+
+                if (preg_match('#@access (.*?)\n#is', $comment, $match)) {
+
+                    if ($match[1] == 'Public') {
+                        $controllerConfig['methods'][$method->getName()]['access'] = 'Public';
+                    }
+                }
+
+                if (preg_match('#@route (.*?)\n#is', $comment, $match)) {
+
+                    // Parse route
+                    $route = $match[1];
+                    $regex = '#^' . preg_replace('#\{([a-z]+)\}#i', '(?<\\1>.*?)', $route) . '$#';
+
+                    $controllerConfig['methods'][$method->getName()]['route']['regex'] = $regex;
+
+                    // Parse variables
+                    preg_match_all('#\{([a-z]+)\}#i', $route, $match);
+                    $controllerConfig['methods'][$method->getName()]['route']['variables'] = $match[1];
+                }
+            }
+
+            $key = $reflectionClass->getName();
+
+            $config[$key] = $controllerConfig;
+
+        }
+
+        $source = "<?php\n/**\n * @generated\n */\n\nreturn " . var_export($config, true) . ";\n";
+        $path = $this->cachepath . 'system/controller.php';
+        file_put_contents($path, $source);
+    }
+
+    /**
+     *
+     */
     public function getControllerCache(\Frootbox\MVC\AbstractController $controller): array
     {
         $path = $this->cachepath . 'system/controller.php';
@@ -148,8 +242,48 @@ class Dispatcher
 
         $controllerClass = '\\' . $this->namespace . '\\Controller\\' . implode('\\', $segments) . '\\Controller';
 
+        $get = $this->container->get(\Frootbox\Http\Get::class);
+
+
+        // Controller class miss
         if (!class_exists($controllerClass)) {
-            throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $controllerClass);
+
+            $this->buildControllerCache();
+
+            // Check for custom routes
+            $config = require $this->cachepath . 'system/controller.php';
+
+            $controllerClass = null;
+
+            foreach ($config as $class => $controllerCfg) {
+
+                if (empty($controllerCfg['methods'])) {
+                    continue;
+                }
+
+                foreach ($controllerCfg['methods'] as $method => $params) {
+
+                    if (empty($params['route'])) {
+                        continue;
+                    }
+
+                    if (preg_match($params['route']['regex'], $request, $match)) {
+
+                        foreach ($params['route']['variables'] as $var) {
+                            $get->set($var, $match[$var] ?? null);
+                        }
+
+                        $action = substr($method, 0, -6);
+                        $controllerClass = $class;
+
+                        break 2;
+                    }
+                }
+            }
+
+            if (empty($controllerClass)) {
+                throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $controllerClass);
+            }
         }
 
         // Build controller
@@ -168,7 +302,6 @@ class Dispatcher
 
                 $controllerClass = '\\' . $this->namespace . '\\Controller\\Session\\Controller';
 
-                $get = $this->container->get(\Frootbox\Http\Get::class);
                 $get->set('originalRequest', $request);
 
                 // Build controller
@@ -191,5 +324,4 @@ class Dispatcher
 
         return $controller;
     }
-
 }
