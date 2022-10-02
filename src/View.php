@@ -85,6 +85,11 @@ class View
 
             try {
                 $xpayload = $this->container->call([ $partial, 'onBeforeRendering' ]);
+
+                if ($xpayload === null) {
+                    return (string) null;
+                }
+
                 $payload = array_merge($payload, $xpayload);
             }
             catch ( \Exception $e ) {
