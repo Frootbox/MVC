@@ -13,7 +13,14 @@ abstract class AbstractPartial implements \Frootbox\MVC\View\PartialInterface
     public function __construct(
         protected $payload = []
     )
+    { }
+
+    /**
+     *
+     */
+    public function __toString(): string
     {
+        return get_class($this);
     }
 
     /**

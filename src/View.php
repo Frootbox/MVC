@@ -16,12 +16,14 @@ class View
         protected \DI\Container $container,
     )
     {
-        if (!file_exists(CORE_DIR . 'resources/private/views/')) {
-            throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . CORE_DIR . 'view/');
+        $viewfolder = CORE_DIR . 'resources/private/views/';
+
+        if (!file_exists($viewfolder)) {
+            throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . $viewfolder);
         }
 
         $loader = new \Twig\Loader\FilesystemLoader([
-            CORE_DIR, CORE_DIR . 'resources/private/views/'
+            CORE_DIR, $viewfolder
         ]);
 
         $this->twig = new \Twig\Environment($loader, [
@@ -51,6 +53,15 @@ class View
     public function getContainer(): \DI\Container
     {
         return $this->container;
+    }
+
+    /**
+     *
+     */
+    public function addPath(string $path): void
+    {
+        $loader = $this->twig->getLoader();
+        $loader->addPath($path);
     }
 
     /**
@@ -98,6 +109,7 @@ class View
         }
 
         // Render partial
+        $payload['partial'] = $partial;
         $viewFile = $partial->getPath() . 'resources/private/views/Partial.html.twig';
 
         $source = $this->render($viewFile, $payload);
