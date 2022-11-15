@@ -67,6 +67,31 @@ class View
     /**
      *
      */
+    public function getPartial(string $partialClass, array $payload = []): \Frootbox\MVC\View\AbstractPartial
+    {
+        // Build partial
+        $segments = explode('/', $partialClass);
+        $partialName = array_pop($segments);
+
+        $partialClass = '\\' . implode('\\', $segments) . '\\' . $partialName . '\\Partial';
+
+        if (!class_exists($partialClass)) {
+            throw new \Exception('Partial ' . $partialClass . ' not loadable');
+        }
+
+        $partial = new $partialClass(payload: $payload);
+
+        // Prime rendering
+        if (method_exists($partial, 'onInit')) {
+            $this->container->call([ $partial, 'onInit' ]);
+        }
+
+        return $partial;
+    }
+
+    /**
+     *
+     */
     public function getViewhelper(string $viewHelperClass): \Frootbox\MVC\View\Viewhelper\AbstractViewhelper
     {
         $viewHelperClass = str_replace('/', '\\', $viewHelperClass);
@@ -77,19 +102,15 @@ class View
     /**
      *
      */
-    public function partial(string $partial, array $payload = []): string
+    public function partial(string $partialClass, array $payload = []): string
     {
-        // Build partial
-        $segments = explode('/', $partial);
-        $partialName = array_pop($segments);
-
-        $partialClass = '\\' . implode('\\', $segments) . '\\' . $partialName . '\\Partial';
-
-        if (!class_exists($partialClass)) {
-            return '<div class="message danger">Partial ' . $partial . ' konnte nicht geladen werden.</div>';
+        try {
+            // Obtain partial
+            $partial = $this->getPartial($partialClass, $payload);
         }
-
-        $partial = new $partialClass(payload: $payload);
+        catch (\Exception $e) {
+            return '<div class="message danger">Partial ' . $partialClass . ' konnte nicht geladen werden.</div>';
+        }
 
         // Prime rendering
         if (method_exists($partial, 'onBeforeRendering')) {
