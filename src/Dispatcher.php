@@ -315,7 +315,7 @@ class Dispatcher
 
         if (!empty($controllerCache['userlevel'])) {
 
-            $user = $this->container->get(\HandwerkConnected\Persistence\Entity\User::class);
+            $user = $this->container->get(\Frootbox\MVC\Persistence\Entities\Interfaces\UserInterface::class);
 
             if (!preg_match('#' . $controllerCache['userlevel'] . '#', $user->getAccess())) {
                 throw new \Frootbox\Exceptions\AccessDenied();
