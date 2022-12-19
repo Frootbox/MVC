@@ -8,6 +8,7 @@ namespace Frootbox\MVC;
 abstract class AbstractController
 {
     protected $action;
+    protected $overrideViewFile = null;
 
     /**
      * @return ResponseInterface
@@ -61,7 +62,14 @@ abstract class AbstractController
             $payload = $response->getPayload();
 
             // Render view file
-            $viewFile = $this->getPath() . 'resources/private/views/' . ucfirst(substr($action, 0, -6)) . '.html.twig';
+            if ($this->overrideViewFile === null) {
+                $viewFile = ucfirst(substr($action, 0, -6)) . '.html.twig';
+            }
+            else {
+                $viewFile = ucfirst($this->overrideViewFile) . '.html.twig';
+            }
+
+            $viewFile = $this->getPath() . 'resources/private/views/' . $viewFile;
 
             if (!file_exists($viewFile)) {
                 throw new \Frootbox\Exceptions\RuntimeError('View file missing ' . str_replace(CORE_DIR, '', $viewFile));
@@ -102,7 +110,7 @@ abstract class AbstractController
     /**
      *
      */
-    public function getUri(string $controller, string $action, array $payload = null): string
+    public function getUri(string $controller, string $action = 'index', array $payload = null): string
     {
         $uri = SERVER_PATH . $controller . '/' . $action;
 
@@ -129,7 +137,4 @@ abstract class AbstractController
     {
         $this->container = $container;
     }
-
-        
-
 }
