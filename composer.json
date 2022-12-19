@@ -11,6 +11,9 @@
             "email": "jan.habbo.bruening@gmail.com"
         }
     ],
+    "require": {
+        "php": ">=8.0.0"
+    },
     "autoload": {
     	"psr-4": { "Frootbox\\MVC\\": "src/" }
     }
