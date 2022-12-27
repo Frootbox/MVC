@@ -289,6 +289,12 @@ class Dispatcher
         // Build controller
         $controller = new $controllerClass;
         $controller->setContainer($this->container);
+
+        // Check action
+        if (!method_exists($controller, $action . 'Action')) {
+            throw new \Frootbox\Exceptions\RuntimeError('Missing action ' . $action . 'Action');
+        }
+
         $controller->setAction($action);
 
         // Check controller requirements
@@ -299,6 +305,11 @@ class Dispatcher
             $session = $this->container->get(\Frootbox\MVC\Session::class);
 
             if (!$session->isLoggedIn()) {
+
+                // If request is ajax return error
+                if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                    throw new \Frootbox\Exceptions\AccessDenied();
+                }
 
                 $controllerClass = '\\' . $this->namespace . '\\Controller\\Session\\Controller';
 
