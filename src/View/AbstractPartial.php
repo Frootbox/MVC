@@ -14,9 +14,9 @@ abstract class AbstractPartial implements \Frootbox\MVC\View\PartialInterface
         protected $payload = []
     )
     { }
-
+    
     /**
-     *
+     * @return string
      */
     public function __toString(): string
     {
@@ -24,7 +24,18 @@ abstract class AbstractPartial implements \Frootbox\MVC\View\PartialInterface
     }
 
     /**
-     *
+     * @param string $parameterName
+     * @return bool
+     */
+    protected function hasParameter(string $parameterName): bool
+    {
+        return isset($this->payload[$parameterName]);
+    }
+
+    /**
+     * @param string $parameterName
+     * @return mixed
+     * @throws \Frootbox\Exceptions\InputMissing
      */
     protected function requireParameter(string $parameterName): mixed
     {
@@ -34,5 +45,4 @@ abstract class AbstractPartial implements \Frootbox\MVC\View\PartialInterface
 
         return $this->payload[$parameterName];
     }
-
 }
