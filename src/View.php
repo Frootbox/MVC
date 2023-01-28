@@ -96,6 +96,10 @@ class View
     {
         $viewHelperClass = str_replace('/', '\\', $viewHelperClass);
 
+        if (!class_exists($viewHelperClass)) {
+            throw new \Exception('Viewhelper class ' . $viewHelperClass . ' missing.');
+        }
+
         return $this->container->get($viewHelperClass);
     }
 
