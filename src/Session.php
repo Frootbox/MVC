@@ -25,7 +25,7 @@ class Session
         $_SESSION['userId'] = $user->getId();
 
         // Set last login
-        if ($user->hasColumn('lastLogin')) {
+        if (empty($_SESSION['skipUserActivity']) and $user->hasColumn('lastLogin')) {
             $user->setLastLogin(date('Y-m-d H:i:s'));
             $user->save();
         }
