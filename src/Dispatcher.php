@@ -110,17 +110,25 @@ class Dispatcher
                     }
                 }
 
-                if (preg_match('#@route (.*?)\n#is', $comment, $match)) {
+                if (preg_match_all('#@route (.*?)\n#is', $comment, $matches)) {
 
-                    // Parse route
-                    $route = $match[1];
-                    $regex = '#^' . preg_replace('#\{([a-z]+)\}#i', '(?<\\1>.*?)', $route) . '$#';
+                    if (!isset($controllerConfig['methods'][$method->getName()]['routes'])) {
+                        $controllerConfig['methods'][$method->getName()]['routes'] = [];
+                    }
 
-                    $controllerConfig['methods'][$method->getName()]['route']['regex'] = $regex;
+                    foreach ($matches[1] as $route) {
 
-                    // Parse variables
-                    preg_match_all('#\{([a-z]+)\}#i', $route, $match);
-                    $controllerConfig['methods'][$method->getName()]['route']['variables'] = $match[1];
+                        $xroute = [];
+
+                        // Parse route
+                        $xroute['regex'] = '#^' . preg_replace('#\{([a-z]+)\}#i', '(?<\\1>.*?)', $route) . '$#';
+
+                        // Parse variables
+                        preg_match_all('#\{([a-z]+)\}#i', $route, $match);
+                        $xroute['variables'] = $match[1];
+
+                        $controllerConfig['methods'][$method->getName()]['routes'][] = $xroute;
+                    }
                 }
             }
 
@@ -263,20 +271,23 @@ class Dispatcher
 
                 foreach ($controllerCfg['methods'] as $method => $params) {
 
-                    if (empty($params['route'])) {
+                    if (empty($params['routes'])) {
                         continue;
                     }
 
-                    if (preg_match($params['route']['regex'], $request, $match)) {
+                    foreach ($params['routes'] as $route) {
 
-                        foreach ($params['route']['variables'] as $var) {
-                            $get->set($var, $match[$var] ?? null);
+                        if (preg_match($route['regex'], $request, $match)) {
+
+                            foreach ($route['variables'] as $var) {
+                                $get->set($var, $match[$var] ?? null);
+                            }
+
+                            $action = substr($method, 0, -6);
+                            $controllerClass = $class;
+
+                            break 3;
                         }
-
-                        $action = substr($method, 0, -6);
-                        $controllerClass = $class;
-
-                        break 2;
                     }
                 }
             }

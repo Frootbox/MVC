@@ -84,6 +84,16 @@ abstract class AbstractController
     }
 
     /**
+     * Get controllers current action
+     *
+     * @return string|null
+     */
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    /**
      *
      */
     public function getActionUri(string $action, array $payload = null): string
