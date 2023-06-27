@@ -261,6 +261,7 @@ class Dispatcher
             // Check for custom routes
             $config = require $this->cachepath . 'system/controller.php';
 
+            $orgControllerClass = $controllerClass;
             $controllerClass = null;
 
             foreach ($config as $class => $controllerCfg) {
@@ -293,7 +294,7 @@ class Dispatcher
             }
 
             if (empty($controllerClass)) {
-                throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $controllerClass);
+                throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $orgControllerClass);
             }
         }
 
