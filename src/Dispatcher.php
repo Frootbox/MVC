@@ -138,8 +138,17 @@ class Dispatcher
 
         }
 
+        // Prepare cache
+        $cacheFilePath = $this->cachepath . 'system/';
+        if (!file_exists($cacheFilePath)) {
+            $oldUmask = umask(0);
+            mkdir($cacheFilePath,0777, true);
+            umask($oldUmask);
+        }
+
+        // Write cache file
         $source = "<?php\n/**\n * @generated\n */\n\nreturn " . var_export($config, true) . ";\n";
-        $path = $this->cachepath . 'system/controller.php';
+        $path = $cacheFilePath . 'controller.php';
         file_put_contents($path, $source);
     }
 
