@@ -136,6 +136,35 @@ abstract class AbstractController
     }
 
     /**
+     * @param array $payload
+     * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Frootbox\Exceptions\RuntimeError
+     */
+    public function render(array $payload = []): string
+    {
+        // Render view file
+        if ($this->overrideViewFile === null) {
+            $viewFile = ucfirst($this->action) . '.html.twig';
+        }
+        else {
+            $viewFile = ucfirst($this->overrideViewFile) . '.html.twig';
+        }
+
+        $viewFile = $this->getPath() . 'resources/private/views/' . $viewFile;
+
+        if (!file_exists($viewFile)) {
+            throw new \Frootbox\Exceptions\RuntimeError('View file missing ' . str_replace(CORE_DIR, '', $viewFile));
+        }
+
+        $view = $this->container->get(\Frootbox\MVC\View::class);
+        $html = $view->render($viewFile, $payload);
+
+        return $html;
+    }
+
+    /**
      * @param string $action
      */
     public function setAction(string $action): void
