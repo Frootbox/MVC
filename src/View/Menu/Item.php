@@ -8,7 +8,15 @@ namespace Frootbox\MVC\View\Menu;
 class Item
 {
     /**
-     *
+     * @param string $title
+     * @param string|null $url
+     * @param string|null $icon
+     * @param string|null $class
+     * @param string|null $confirm
+     * @param array|null $paths
+     * @param int|null $badge
+     * @param bool $isModal
+     * @param array|null $subItems
      */
     public function __construct(
         protected string $title,
@@ -19,13 +27,14 @@ class Item
         protected ?array $paths = null,
         protected ?int $badge = null,
         protected bool $isModal = false,
+        protected ?array $subItems = null,
     )
     {
 
     }
 
     /**
-     *
+     * @return int|null
      */
     public function getBadge(): ?int
     {
@@ -33,7 +42,7 @@ class Item
     }
 
     /**
-     *
+     * @return string|null
      */
     public function getClass(): ?string
     {
@@ -41,7 +50,7 @@ class Item
     }
 
     /**
-     *
+     * @return string|null
      */
     public function getConfirm(): ?string
     {
@@ -49,7 +58,7 @@ class Item
     }
 
     /**
-     *
+     * @return string
      */
     public function getIcon(): string
     {
@@ -61,7 +70,7 @@ class Item
     }
 
     /**
-     *
+     * @return bool
      */
     public function isModal(): bool
     {
@@ -69,7 +78,15 @@ class Item
     }
 
     /**
-     *
+     * @return array
+     */
+    public function getSubItems(): array
+    {
+        return $this->subItems ?? [];
+    }
+
+    /**
+     * @return string
      */
     public function getTitle(): string
     {
@@ -77,7 +94,7 @@ class Item
     }
 
     /**
-     *
+     * @return string|null
      */
     public function getUrl(): ?string
     {
@@ -85,7 +102,7 @@ class Item
     }
 
     /**
-     *
+     * @return bool
      */
     public function isActive(): bool
     {
