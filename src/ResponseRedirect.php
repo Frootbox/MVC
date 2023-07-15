@@ -8,7 +8,7 @@ namespace Frootbox\MVC;
 class ResponseRedirect implements ResponseInterface
 {
     /**
-     *
+     * @param string $target
      */
     public function __construct(
         protected string $target,
@@ -16,7 +16,7 @@ class ResponseRedirect implements ResponseInterface
     {}
 
     /**
-     *
+     * @return string
      */
     public function getTarget(): string
     {

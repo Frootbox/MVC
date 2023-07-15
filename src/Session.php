@@ -18,6 +18,7 @@ class Session
     /**
      * @param Persistence\Entities\Interfaces\UserInterface $user
      * @return void
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function login(\Frootbox\MVC\Persistence\Entities\Interfaces\UserInterface $user): void
     {

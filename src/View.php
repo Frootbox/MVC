@@ -7,23 +7,24 @@ namespace Frootbox\MVC;
 
 class View
 {
-    protected $twig;
+    protected \Twig\Environment $twig;
 
     /**
-     *
+     * @param \DI\Container $container
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function __construct(
         protected \DI\Container $container,
     )
     {
-        $viewfolder = CORE_DIR . 'resources/private/views/';
+        $viewFolder = CORE_DIR . 'resources/private/views/';
 
-        if (!file_exists($viewfolder)) {
-            throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . $viewfolder);
+        if (!file_exists($viewFolder)) {
+            throw new \Frootbox\Exceptions\RuntimeError('View folder missing ' . $viewFolder);
         }
 
         $loader = new \Twig\Loader\FilesystemLoader([
-            CORE_DIR, $viewfolder
+            CORE_DIR, $viewFolder
         ]);
 
         $this->twig = new \Twig\Environment($loader, [
@@ -32,15 +33,18 @@ class View
     }
 
     /**
-     * 
+     * @param \Twig\TwigFilter $filter
+     * @return void
      */
     public function addFilter(\Twig\TwigFilter $filter): void
     {
         $this->twig->addFilter($filter);
     }
-    
+
     /**
-     *
+     * @param $var
+     * @param $value
+     * @return void
      */
     public function assign($var, $value): void
     {
@@ -48,7 +52,7 @@ class View
     }
 
     /**
-     *
+     * @return \DI\Container
      */
     public function getContainer(): \DI\Container
     {
@@ -56,7 +60,8 @@ class View
     }
 
     /**
-     *
+     * @param string $path
+     * @return void
      */
     public function addPath(string $path): void
     {
@@ -65,7 +70,10 @@ class View
     }
 
     /**
-     *
+     * @param string $partialClass
+     * @param array $payload
+     * @return View\AbstractPartial
+     * @throws \Exception
      */
     public function getPartial(string $partialClass, array $payload = []): \Frootbox\MVC\View\AbstractPartial
     {
@@ -90,7 +98,10 @@ class View
     }
 
     /**
-     *
+     * @param string $viewHelperClass
+     * @return View\Viewhelper\AbstractViewhelper
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getViewhelper(string $viewHelperClass): \Frootbox\MVC\View\Viewhelper\AbstractViewhelper
     {
@@ -104,7 +115,9 @@ class View
     }
 
     /**
-     *
+     * @param string $partialClass
+     * @param array $payload
+     * @return string
      */
     public function partial(string $partialClass, array $payload = []): string
     {
@@ -143,7 +156,12 @@ class View
     }
 
     /**
-     *
+     * @param string $viewfile
+     * @param array|null $variables
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function render(string $viewfile, array $variables = null): string
     {

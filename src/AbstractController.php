@@ -7,11 +7,14 @@ namespace Frootbox\MVC;
 
 abstract class AbstractController
 {
-    protected $action;
-    protected $overrideViewFile = null;
+    protected ?\DI\Container $container = null;
+    protected ?string $action;
+    protected ?string $overrideViewFile = null;
 
     /**
      * @return ResponseInterface
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function execute(): ResponseInterface
@@ -51,7 +54,7 @@ abstract class AbstractController
             exit;
         }
 
-        if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+        if (str_contains($_SERVER['HTTP_ACCEPT'], 'application/json')) {
 
             header('Content-Type: application/json; charset=utf-8');
             die(json_encode($response->getPayload()));
@@ -159,9 +162,7 @@ abstract class AbstractController
         }
 
         $view = $this->container->get(\Frootbox\MVC\View::class);
-        $html = $view->render($viewFile, $payload);
-
-        return $html;
+        return $view->render($viewFile, $payload);
     }
 
     /**
@@ -172,6 +173,10 @@ abstract class AbstractController
         $this->action = $action;        
     }
 
+    /**
+     * @param \DI\Container $container
+     * @return void
+     */
     public function setContainer(\DI\Container $container): void
     {
         $this->container = $container;

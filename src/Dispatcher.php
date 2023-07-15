@@ -7,10 +7,10 @@ namespace Frootbox\MVC;
 
 class Dispatcher
 {
-    protected $namespace;
-    protected $cachepath;
-    protected $baseDir = null;
-    protected $container;
+    protected ?string $namespace;
+    protected ?string $cachepath;
+    protected ?string $baseDir = null;
+    protected \DI\Container $container;
 
     /**
      *
@@ -42,7 +42,8 @@ class Dispatcher
     }
 
     /**
-     *
+     * @return void
+     * @throws \ReflectionException
      */
     protected function buildControllerCache(): void
     {
@@ -135,7 +136,6 @@ class Dispatcher
             $key = $reflectionClass->getName();
 
             $config[$key] = $controllerConfig;
-
         }
 
         // Prepare cache
@@ -153,7 +153,8 @@ class Dispatcher
     }
 
     /**
-     *
+     * @param AbstractController $controller
+     * @return array
      */
     public function getControllerCache(\Frootbox\MVC\AbstractController $controller): array
     {
@@ -223,7 +224,11 @@ class Dispatcher
     }
 
     /**
-     *
+     * @return AbstractController
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Frootbox\Exceptions\AccessDenied
+     * @throws \Frootbox\Exceptions\RuntimeError
      */
     public function getControllerFromRequest(): AbstractController
     {

@@ -7,8 +7,8 @@ namespace Frootbox\MVC;
 
 class Response implements ResponseInterface
 {
-    protected $body;
-    protected $payload = [];
+    protected ?string $body = null;
+    protected array $payload = [];
 
     /**
      *
@@ -21,7 +21,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     *
+     * @return string|null
      */
     public function getBody(): ?string
     {
@@ -29,7 +29,7 @@ class Response implements ResponseInterface
     }
 
     /**
-     * 
+     * @return array
      */
     public function getPayload(): array
     {
@@ -37,11 +37,11 @@ class Response implements ResponseInterface
     }
 
     /**
-     *
+     * @param string $body
+     * @return void
      */
     public function setBody(string $body): void
     {
         $this->body = $body;
     }
-
 }
