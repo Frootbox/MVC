@@ -130,6 +130,16 @@ class Item
             if ($staticRequest == $path) {
                 return true;
             }
+
+            // Check item path for wildcard
+            if (strpos($path,'*') !== false) {
+
+                $regex = str_replace('*', '(.*?)', $path);
+
+                if (preg_match('#' . $regex . '#', $staticRequest)) {
+                    return true;
+                }
+            }
         }
 
         return false;
