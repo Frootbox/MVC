@@ -232,6 +232,9 @@ class Dispatcher
      */
     public function getControllerFromRequest(): AbstractController
     {
+        // Obtain configuration
+        $configuration = $this->container->get(\Frootbox\Config\Config::class);
+
         // Extract request
         if ($_SERVER['SCRIPT_NAME'] != '/index.php') {
             $request = str_replace(substr($_SERVER['SCRIPT_NAME'], 0, -9), '', $_SERVER['REQUEST_URI']);
@@ -249,8 +252,15 @@ class Dispatcher
 
         $request = explode('?', $request)[0];
 
+        // Set request to default
         if (empty($request)) {
-            $request = 'Session/login';
+
+            if (!empty($configuration->get('Platform.DefaultController.Controller'))) {
+                $request = $configuration->get('Platform.DefaultController.Controller') . '/' . ($configuration->get('Platform.DefaultController.Action') ?? 'index');
+            }
+            else {
+                $request = 'Session/login';
+            }
         }
 
         $segments = explode('/', $request);

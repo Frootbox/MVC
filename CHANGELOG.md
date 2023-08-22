@@ -6,9 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2023-08-21
+
 ### Added
 
 - Added wildcard option to menu items active state.
+- Added configuration ```Platform.DefaultController.*``` to change default controller and action.
 
 ## [0.3] - 2023-07-15
 
