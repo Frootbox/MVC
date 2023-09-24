@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\MVC;
@@ -98,7 +98,9 @@ abstract class AbstractController
     }
 
     /**
-     *
+     * @param string $action
+     * @param array|null $payload
+     * @return string
      */
     public function getActionUri(string $action, array $payload = null): string
     {
@@ -117,12 +119,15 @@ abstract class AbstractController
     }
 
     /**
-     *
+     * @return string
      */
     abstract public function getPath(): string;
 
     /**
-     *
+     * @param string $controller
+     * @param string $action
+     * @param array|null $payload
+     * @return string
      */
     public function getUri(string $controller, string $action = 'index', array $payload = null): string
     {

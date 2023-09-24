@@ -29,9 +29,7 @@ class Item
         protected bool $isModal = false,
         protected ?array $subItems = null,
     )
-    {
-
-    }
+    { }
 
     /**
      * @return int|null

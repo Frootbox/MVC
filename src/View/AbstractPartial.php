@@ -8,7 +8,7 @@ namespace Frootbox\MVC\View;
 abstract class AbstractPartial implements \Frootbox\MVC\View\PartialInterface
 {
     /**
-     *
+     * @param $payload
      */
     public function __construct(
         protected $payload = []

@@ -8,7 +8,7 @@ namespace Frootbox\MVC\View;
 class Front
 {
     /**
-     *
+     * @return array
      */
     public function getClearMessages(): array
     {
@@ -20,7 +20,7 @@ class Front
     }
 
     /**
-     *
+     * @return array
      */
     public function getMessages(): array
     {
@@ -32,7 +32,7 @@ class Front
     }
 
     /**
-     *
+     * @return bool
      */
     public function hasMessages(): bool
     {
@@ -60,7 +60,8 @@ class Front
     }
 
     /**
-     *
+     * @param string $message
+     * @return void
      */
     public static function success(string $message): void
     {

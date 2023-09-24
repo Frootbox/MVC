@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
 namespace Frootbox\MVC;
@@ -13,7 +13,8 @@ class Dispatcher
     protected \DI\Container $container;
 
     /**
-     *
+     * @param \DI\Container $container
+     * @param array|null $options
      */
     public function __construct(\DI\Container $container, array $options = null)
     {

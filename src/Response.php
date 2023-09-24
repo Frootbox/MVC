@@ -11,7 +11,7 @@ class Response implements ResponseInterface
     protected array $payload = [];
 
     /**
-     *
+     * @param array|null $payload
      */
     public function __construct(array $payload = null)
     {

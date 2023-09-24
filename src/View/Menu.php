@@ -8,17 +8,15 @@ namespace Frootbox\MVC\View;
 class Menu
 {
     /**
-     *
+     * @param array $sections
      */
     public function __construct(
         public array $sections,
     )
-    {
-
-    }
+    { }
 
     /**
-     *
+     * @return array
      */
     public function getSections(): array
     {
