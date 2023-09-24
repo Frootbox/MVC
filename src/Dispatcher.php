@@ -343,7 +343,7 @@ class Dispatcher
             if (!$session->isLoggedIn()) {
 
                 // If request is ajax return error
-                if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                if (!empty($_SERVER['HTTP_ACCEPT']) and strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
                     throw new \Frootbox\Exceptions\AccessDenied();
                 }
 

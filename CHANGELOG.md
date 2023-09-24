@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed handling of json requests.
+
 ## [0.3.1] - 2023-08-21
 
 ### Added
