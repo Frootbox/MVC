@@ -100,11 +100,15 @@ class Item
     }
 
     /**
+     * Checks if menu items is active
+     *
+     * Return true if items url or any url in items optional paths matches current url. The host and query components
+     * are ignored while comparing.
+     *
      * @return bool
      */
     public function isActive(): bool
     {
-
         if (ORIGINAL_REQUEST == $this->getUrl()) {
             return true;
         }
@@ -113,6 +117,16 @@ class Item
 
         if ($staticRequest == $this->getUrl()) {
             return true;
+        }
+
+        if (str_starts_with($this->getUrl(), SERVER_PATH)) {
+
+            $url = str_replace(SERVER_PATH, '', $this->getUrl());
+            $url = explode('?', $url)[0];
+
+            if ($staticRequest == $url) {
+                return true;
+            }
         }
 
         if (empty($this->paths)) {
