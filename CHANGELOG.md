@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Fixed
 
 - Improved recognition of active state of menu items.
+- Added resources recursively to support adding multiple resources.
 
 ## [0.4] - 2023-09-24
 

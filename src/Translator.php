@@ -32,7 +32,11 @@ class Translator {
      */
     public function addResource(string $file, string $language = 'de-DE' ): void
     {
-        $this->data[$language] = require($file);
+        if (!isset($this->data[$language])) {
+            $this->data[$language] = [];
+        }
+
+        $this->data[$language] = array_merge_recursive($this->data[$language], require($file));
     }
 
     /**
