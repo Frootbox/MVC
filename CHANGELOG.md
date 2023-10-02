@@ -6,13 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2023-10-02
+
+### Changed
+
+- Added support for regular expressions on ```View\Menu\Item::$paths```
+
 ## [0.5] - 2023-09-30
 
-## Added
+### Added
 
 - Added cache support.
 
-## Fixed
+### Fixed
 
 - Improved recognition of active state of menu items.
 - Added resources recursively to support adding multiple resources.

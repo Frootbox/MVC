@@ -144,10 +144,16 @@ class Item
             }
 
             // Check item path for wildcard
-            if (strpos($path,'*') !== false) {
+            $regex = null;
 
+            if (preg_match('#[\?\!\$]+#', $path, $match)) {
+                $regex = $path;
+            }
+            elseif (strpos($path,'*') !== false) {
                 $regex = str_replace('*', '(.*?)', $path);
+            }
 
+            if ($regex) {
                 if (preg_match('#' . $regex . '#', $staticRequest)) {
                     return true;
                 }
