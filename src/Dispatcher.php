@@ -350,7 +350,7 @@ class Dispatcher
 
                 $controllerClass = '\\' . $this->namespace . '\\Controller\\Session\\Controller';
 
-                $get->set('originalRequest', $request);
+                $get->set('originalRequest', ORIGINAL_REQUEST);
 
                 // Build controller
                 $controller = new $controllerClass;
