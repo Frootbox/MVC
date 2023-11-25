@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.2] - 2023-11-25
+
+### Added
+
+- Added method ```AbstractController::getControllerName()```.
+
 ## [0.5.1] - 2023-10-02
 
 ### Changed

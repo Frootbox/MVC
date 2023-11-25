@@ -121,6 +121,16 @@ abstract class AbstractController
     /**
      * @return string
      */
+    public function getControllerName(): string
+    {
+        preg_match('#\\\\Controller\\\\(.*?)\\\\Controller$#', get_class($this), $match);
+
+        return str_replace('\\', '/', $match[1]);
+    }
+
+    /**
+     * @return string
+     */
     abstract public function getPath(): string;
 
     /**
