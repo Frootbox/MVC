@@ -10,13 +10,17 @@ class Dispatcher
     protected ?string $namespace;
     protected ?string $cachepath;
     protected ?string $baseDir = null;
-    protected \DI\Container $container;
 
     /**
      * @param \DI\Container $container
      * @param array|null $options
+     * @param array|null $routes
      */
-    public function __construct(\DI\Container $container, array $options = null)
+    public function __construct(
+        protected \DI\Container $container,
+        array $options = null,
+        protected ?array $routes = null
+    )
     {
         if (!empty($options['namespace'])) {
             $this->namespace = $options['namespace'];
@@ -29,8 +33,6 @@ class Dispatcher
         if (!empty($options['baseDir'])) {
             $this->baseDir = $options['baseDir'];
         }
-
-        $this->container = $container;
 
         $path = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) ? 'https' : 'http';
         $path .= '://' . $_SERVER['SERVER_NAME'];
@@ -48,7 +50,6 @@ class Dispatcher
      */
     protected function buildControllerCache(): void
     {
-
         function getDirContents($dir, &$results = array()) {
             $files = scandir($dir);
 
@@ -250,8 +251,11 @@ class Dispatcher
 
         define('ORIGINAL_REQUEST', $request);
 
-
         $request = explode('?', $request)[0];
+
+        if (!empty($this->routes[$request])) {
+            $request = $this->routes[$request];
+        }
 
         // Set request to default
         if (empty($request)) {

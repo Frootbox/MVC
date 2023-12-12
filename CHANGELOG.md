@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6] - 2023-12-12
+
+### Added
+
+- Added custom routes to dispatcher.
+
 ## [0.5.2] - 2023-11-25
 
 ### Added
