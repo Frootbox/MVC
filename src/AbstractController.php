@@ -44,7 +44,7 @@ abstract class AbstractController
                 $target = SERVER_PATH . $target;
             }
 
-            if (strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+            if (!empty($_SERVER['HTTP_ACCEPT']) and strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
                 die(json_encode([
                     'redirect' => $target,
                 ]));
