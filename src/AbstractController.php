@@ -139,16 +139,12 @@ abstract class AbstractController
      * @param array|null $payload
      * @return string
      */
-    public function getUri(string $controller, string $action = 'index', array $payload = null): string
+    public function getUri(string $controller, string $action = 'index', array $payload = null): View\Uri
     {
-        $uri = SERVER_PATH . $controller . '/' . $action;
+        $uri = View\Uri::fromUrl(SERVER_PATH . $controller . '/' . $action);
 
         if (!empty($payload)) {
-            $payload = array_filter($payload);
-        }
-
-        if (!empty($payload)) {
-            $uri .= '?' . http_build_query($payload);
+            $uri->setQuery($payload);
         }
 
         return $uri;
