@@ -5,7 +5,7 @@
 
 namespace Frootbox\MVC\View;
 
-class Uri
+class Uri implements \JsonSerializable
 {
     /**
      * @param string $scheme
@@ -45,6 +45,13 @@ class Uri
         }
 
         return $string;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed {
+        return (string) $this;
     }
 
     /**
