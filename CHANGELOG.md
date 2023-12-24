@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.4] - 2023-12-24
+
+### Changed
+
+- Changed exception when controller is missong to ```Frootbox\Exceptions\NotFound```
+
+## [0.6.3] - 2023-12-21
+
+### Added
+
+- Added jsonSerializable interface to Uri.
+
 ## [0.6] - 2023-12-12
 
 ### Added
