@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.5] - 2023-12-26
+
+### Fixed
+
+- Recognize also action from cache when controller was found by route.
+
 ## [0.6.4] - 2023-12-24
 
 ### Changed

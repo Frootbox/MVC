@@ -333,7 +333,51 @@ class Dispatcher
 
         // Check action
         if (!method_exists($controller, $action . 'Action')) {
-            throw new \Frootbox\Exceptions\RuntimeError('Missing action ' . $action . 'Action');
+
+            $this->buildControllerCache();
+
+            // Check for custom routes
+            $config = require $this->cachepath . 'system/controller.php';
+
+            $orgControllerClass = $controllerClass;
+            $controllerClass = null;
+
+            foreach ($config as $class => $controllerCfg) {
+                if (empty($controllerCfg['methods'])) {
+                    continue;
+                }
+
+                foreach ($controllerCfg['methods'] as $method => $params) {
+                    if (empty($params['routes'])) {
+                        continue;
+                    }
+
+                    foreach ($params['routes'] as $route) {
+                        if (preg_match($route['regex'], $request, $match)) {
+                            foreach ($route['variables'] as $var) {
+                                $get->set($var, $match[$var] ?? null);
+                            }
+
+                            $action = substr($method, 0, -6);
+                            $controllerClass = $class;
+
+                            break 3;
+                        }
+                    }
+                }
+            }
+
+            if (empty($controllerClass)) {
+                throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $orgControllerClass);
+            }
+
+            if (empty($action)) {
+                throw new \Frootbox\Exceptions\RuntimeError('Missing action ' . $action . 'Action');
+            }
+
+            // Build controller
+            $controller = new $controllerClass;
+            $controller->setContainer($this->container);
         }
 
         $controller->setAction($action);
