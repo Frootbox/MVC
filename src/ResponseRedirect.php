@@ -5,21 +5,11 @@
 
 namespace Frootbox\MVC;
 
-class ResponseRedirect implements ResponseInterface
+/**
+ * @deprecated
+ * @see \Frootbox\MVC\Response\Redirect
+ */
+class ResponseRedirect implements Response\ResponseInterface
 {
-    /**
-     * @param string $target
-     */
-    public function __construct(
-        protected string $target,
-    )
-    {}
 
-    /**
-     * @return string
-     */
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
 }

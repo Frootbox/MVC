@@ -5,7 +5,11 @@
 
 namespace Frootbox\MVC;
 
-interface ResponseInterface
+/**
+ * @deprecated
+ * @see \Frootbox\MVC\Response\ResponseInterface
+ */
+interface ResponseInterface extends \Frootbox\MVC\Response\ResponseInterface
 {
 
 }

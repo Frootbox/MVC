@@ -3,9 +3,9 @@
  * @author Jan Habbo Brüning <jan.habbo.bruening@gmail.com>
  */
 
-namespace Frootbox\MVC;
+namespace Frootbox\MVC\Response;
 
-class Response extends Response\AbstractResponse
+interface ResponseInterface
 {
 
 }
