@@ -9,7 +9,7 @@ namespace Frootbox\MVC;
  * @deprecated
  * @see \Frootbox\MVC\Response\Redirect
  */
-class ResponseRedirect implements Response\ResponseInterface
+class ResponseRedirect extends Response\Redirect
 {
 
 }

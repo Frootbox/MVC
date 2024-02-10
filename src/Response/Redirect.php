@@ -5,7 +5,7 @@
 
 namespace Frootbox\MVC\Response;
 
-class Redirect
+class Redirect extends AbstractResponse
 {
     /**
      * @param string $target
