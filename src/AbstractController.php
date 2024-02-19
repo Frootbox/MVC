@@ -36,7 +36,7 @@ abstract class AbstractController
         // Perform controller action
         $response = $this->container->call([ $this, $action ]);
 
-        if ($response instanceof \Frootbox\MVC\ResponseRedirect) {
+        if ($response instanceof \Frootbox\MVC\Response\Redirect) {
 
             $target = $response->getTarget();
 
