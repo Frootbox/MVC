@@ -368,11 +368,7 @@ class Dispatcher
             }
 
             if (empty($controllerClass)) {
-                throw new \Frootbox\Exceptions\RuntimeError('Missing controller ' . $orgControllerClass);
-            }
-
-            if (empty($action)) {
-                throw new \Frootbox\Exceptions\RuntimeError('Missing action ' . $action . 'Action');
+                throw new \Frootbox\Exceptions\RuntimeError('Missing action ' . $action);
             }
 
             // Build controller
