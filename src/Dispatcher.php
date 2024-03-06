@@ -129,7 +129,10 @@ class Dispatcher
                         $xroute = [];
 
                         // Parse route
-                        $xroute['regex'] = '#^' . preg_replace('#\{([a-z]+)\}#i', '(?<\\1>.*?)', $route) . '$#';
+                        $regex = preg_replace('#\{([a-z]+Id)\}#i', '(?<\\1>[0-9]+)', $route);
+                        $regex = preg_replace('#\{([a-z]+)\}#i', '(?<\\1>.*?)', $regex);
+
+                        $xroute['regex'] = '#^' . $regex . '$#';
 
                         // Parse variables
                         preg_match_all('#\{([a-z]+)\}#i', $route, $match);
