@@ -119,6 +119,11 @@ class Dispatcher
                         $controllerConfig['methods'][$method->getName()]['routes'] = [];
                     }
 
+                    // Check comment for original route note
+                    if (preg_match('#@original (.*?)\n#is', $comment, $originalRouteMatch)) {
+                        $originalRouteMatch = $originalRouteMatch[1];
+                    }
+
                     foreach ($matches[1] as $route) {
 
                         $xroute = [];
@@ -129,6 +134,7 @@ class Dispatcher
                         // Parse variables
                         preg_match_all('#\{([a-z]+)\}#i', $route, $match);
                         $xroute['variables'] = $match[1];
+                        $xroute['original'] = $originalRouteMatch ?? null;
 
                         $controllerConfig['methods'][$method->getName()]['routes'][] = $xroute;
                     }
@@ -316,6 +322,10 @@ class Dispatcher
                             $action = substr($method, 0, -6);
                             $controllerClass = $class;
 
+                            if (!empty($route['original'])) {
+                                define('ORIGINAL_ROUTE', $route['original']);
+                            }
+
                             break 3;
                         }
                     }
@@ -325,6 +335,10 @@ class Dispatcher
             if (empty($controllerClass)) {
                 throw new \Frootbox\Exceptions\NotFound('Missing controller ' . $orgControllerClass);
             }
+        }
+
+        if (!defined('ORIGINAL_ROUTE')) {
+            define('ORIGINAL_ROUTE', explode('?', ORIGINAL_REQUEST)[0]);
         }
 
         // Build controller

@@ -135,6 +135,10 @@ class Item
 
         foreach ($this->paths as $path) {
 
+            if (ORIGINAL_ROUTE == $path) {
+                return true;
+            }
+
             if (ORIGINAL_REQUEST == $path) {
                 return true;
             }
