@@ -8,7 +8,7 @@ namespace Frootbox\MVC;
 class Translator {
 
     protected string $languagePrimary = 'de-DE';
-    protected array $data;
+    protected array $data = [];
 
     /**
      * @param string $file
@@ -22,7 +22,7 @@ class Translator {
         }
 
         // Set data from cache
-        $this->setData(require $file);
+        $this->setData(array_merge($this->data, require $file));
     }
 
     /**
@@ -37,6 +37,14 @@ class Translator {
         }
 
         $this->data[$language] = array_merge_recursive($this->data[$language], require($file));
+    }
+
+    /**
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        $this->data = [];
     }
 
     /**
@@ -57,12 +65,25 @@ class Translator {
     }
 
     /**
+     * @param string $languagePrimary
+     * @return void
+     */
+    public function setPrimary(string $languagePrimary): void
+    {
+        $this->languagePrimary = $languagePrimary;
+    }
+
+    /**
      * @param string $key
      * @return string|null
      */
     public function translate(string $key): ?string
     {
-        return $this->data[$this->languagePrimary][$key] ?? $key;
+        if (isset($this->data[$this->languagePrimary][$key])) {
+            return $this->data[$this->languagePrimary][$key];
+        }
+
+        return $this->data['de-DE'][$key] ?? $key;
     }
 
     /**
