@@ -137,6 +137,30 @@ abstract class AbstractController
      * @param string $controller
      * @param string $action
      * @param array|null $payload
+     * @return View\Uri
+     */
+    public function getSubUri(string $controller, string $action = 'index', array $payload = null): View\Uri
+    {
+        $segments = explode('\\', get_class($this));
+        array_shift($segments);
+        array_shift($segments);
+        array_pop($segments);
+
+        $uri = SERVER_PATH . implode('/', $segments) . '/' . $controller . '/' . $action;
+
+        $uri = View\Uri::fromUrl($uri);
+
+        if (!empty($payload)) {
+            $uri->setQuery($payload);
+        }
+
+        return $uri;
+    }
+
+    /**
+     * @param string $controller
+     * @param string $action
+     * @param array|null $payload
      * @return string
      */
     public function getUri(string $controller, string $action = 'index', array $payload = null): View\Uri
