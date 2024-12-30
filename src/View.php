@@ -77,16 +77,20 @@ class View
      */
     public function getPartial(string $partialClass, array $payload = []): \Frootbox\MVC\View\AbstractPartial
     {
-        // Build partial
-        $segments = explode('/', $partialClass);
-        $partialName = array_pop($segments);
-
-        $partialClass = '\\' . implode('\\', $segments) . '\\' . $partialName . '\\Partial';
-
+        // Check partial class
         if (!class_exists($partialClass)) {
-            throw new \Exception('Partial ' . $partialClass . ' not loadable');
+
+            $segments = explode('/', $partialClass);
+            $partialName = array_pop($segments);
+
+            $partialClass = '\\' . implode('\\', $segments) . '\\' . $partialName . '\\Partial';
+
+            if (!class_exists($partialClass)) {
+                throw new \Exception('Partial ' . $partialClass . ' not loadable');
+            }
         }
 
+        // Build partial
         $partial = new $partialClass(payload: $payload);
 
         // Prime rendering
