@@ -8,7 +8,7 @@ namespace Frootbox\MVC;
 abstract class AbstractController
 {
     protected ?\DI\Container $container = null;
-    protected ?string $action;
+    protected ?string $action = null;
     protected ?string $overrideViewFile = null;
 
     /**
