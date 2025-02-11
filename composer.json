@@ -13,7 +13,14 @@
     ],
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": ">=8.0.0"
+        "php": ">=8.3",
+        "php-di/php-di": "^6",
+        "frootbox/db":"^1",
+        "frootbox/http":"^0",
+        "frootbox/config":"^1",
+        "frootbox/exceptions":"^0",
+        "doctrine/annotations": "^1",
+        "twig/twig":"^3"
     },
     "autoload": {
     	"psr-4": { "Frootbox\\MVC\\": "src/" }
