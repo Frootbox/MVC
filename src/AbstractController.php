@@ -30,8 +30,11 @@ abstract class AbstractController
         // Prime view layer
         $view = $this->container->get(\Frootbox\MVC\View::class);
         $view->assign('get', $this->container->get(\Frootbox\Http\Get::class));
+        $view->assign('Get', $this->container->get(\Frootbox\Http\Get::class));
         $view->assign('controller', $this);
+        $view->assign('Controller', $this);
         $view->assign('configuration', $configuration);
+        $view->assign('Configuration', $configuration);
 
         // Perform controller action
         $response = $this->container->call([ $this, $action ]);
