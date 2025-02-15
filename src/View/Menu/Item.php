@@ -17,6 +17,7 @@ class Item
      * @param int|null $badge
      * @param bool $isModal
      * @param array|null $subItems
+     * @param Item|null $subAction
      */
     public function __construct(
         protected string $title,
@@ -28,6 +29,7 @@ class Item
         protected ?int $badge = null,
         protected bool $isModal = false,
         protected ?array $subItems = null,
+        protected ?Item $subAction = null,
     )
     { }
 
@@ -65,6 +67,14 @@ class Item
         }
 
         return $this->icon;
+    }
+
+    /**
+     * @return Item|null
+     */
+    public function getSubAction(): ?Item
+    {
+        return $this->subAction;
     }
 
     /**
