@@ -86,7 +86,7 @@ class View
             $partialClass = '\\' . implode('\\', $segments) . '\\' . $partialName . '\\Partial';
 
             if (!class_exists($partialClass)) {
-                throw new \Exception('Partial ' . $partialClass . ' not loadable');
+                throw new \Frootbox\MVC\Exception\ClassNotFound\PartialClass($partialClass);
             }
         }
 
@@ -125,13 +125,10 @@ class View
      */
     public function partial(string $partialClass, array $payload = []): string
     {
-        try {
-            // Obtain partial
-            $partial = $this->getPartial($partialClass, $payload);
-        }
-        catch (\Exception $e) {
-            return '<div class="message danger">Partial ' . $partialClass . ' konnte nicht geladen werden.</div>';
-        }
+        // Obtain partial
+        $partial = $this->getPartial($partialClass, $payload);
+
+        // return '<div class="message danger">Partial ' . $partialClass . ' konnte nicht geladen werden.</div>';
 
         // Prime rendering
         if (method_exists($partial, 'onBeforeRendering')) {
