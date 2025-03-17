@@ -33,12 +33,25 @@ class View
     }
 
     /**
+     * Register custom twig filter
+     * 
      * @param \Twig\TwigFilter $filter
      * @return void
      */
     public function addFilter(\Twig\TwigFilter $filter): void
     {
         $this->twig->addFilter($filter);
+    }
+
+    /**
+     * Register custom twig function
+     *
+     * @param \Twig\TwigFunction $function
+     * @return void
+     */
+    public function addFunction(\Twig\TwigFunction $function): void
+    {
+        $this->twig->addFunction($function);
     }
 
     /**
