@@ -283,13 +283,20 @@ class Dispatcher
             $segments[] = 'index';
         }
 
+        // Obtain action from request
         $action = array_pop($segments);
+
+        // Convert potential kebab-case to camel-case
+        $action = lcfirst(str_replace(' ', '', ucwords(str_replace('-', ' ', $action))));
+
+        // Capitalize controller namespace
         $segments = array_map('ucfirst', $segments);
 
+        // Build controller class
         $controllerClass = '\\' . $this->namespace . '\\Controller\\' . implode('\\', $segments) . '\\Controller';
 
+        // Obtain get
         $get = $this->container->get(\Frootbox\Http\Get::class);
-
 
         // Controller class miss
         if (!class_exists($controllerClass)) {
