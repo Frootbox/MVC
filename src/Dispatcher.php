@@ -7,19 +7,23 @@ namespace Frootbox\MVC;
 
 class Dispatcher
 {
-    protected ?string $namespace;
-    protected ?string $cachepath;
-    protected ?string $baseDir = null;
-
     /**
      * @param \DI\Container $container
      * @param array|null $options
      * @param array|null $routes
+     * @param string|null $namespace
+     * @param string|null $cachepath
+     * @param string|null $baseDir
+     * @param Controller\Interface\PermissioNValidatorInterface|null $permissioNValidator
      */
     public function __construct(
         protected \DI\Container $container,
-        array $options = null,
-        protected ?array $routes = null
+        protected ?array $options = null,
+        protected ?array $routes = null,
+        protected ?string $namespace = null,
+        protected ?string $cachepath = null,
+        protected ?string $baseDir = null,
+        protected ?\Frootbox\MVC\Controller\Interface\PermissioNValidatorInterface $permissioNValidator = null, 
     )
     {
         if (!empty($options['namespace'])) {
@@ -210,7 +214,8 @@ class Dispatcher
 
             foreach ($reflectionClass->getMethods() as $method) {
 
-                if (substr($method->getName(), -6) != 'Action') {
+                // Skip all non-actions
+                if ($method->getName() == 'getMenuForAction' or substr($method->getName(), -6) != 'Action') {
                     continue;
                 }
 
@@ -401,6 +406,45 @@ class Dispatcher
         }
 
         $controller->setAction($action);
+
+        // Auth via class attributes
+        $reflectionClass = new \ReflectionClass(get_class($controller));
+
+        $attributes = $reflectionClass->getAttributes(\Frootbox\MVC\Controller\Attribute\PermissionRequest::class);
+
+        foreach ($attributes as $attribute) {
+
+            $permissionRequest = $attribute->newInstance();
+
+            if ($this->permissioNValidator !== null) {
+
+                if ($permissionRequest->hasAccessKey()) {
+                    if (!$this->permissioNValidator->validateAccessKey($permissionRequest->getAccessKey())) {
+                        throw new \Frootbox\Exceptions\AccessDenied();
+                    }
+                }
+            }
+        }
+
+        // Check access on method
+        $reflectionMethod = $reflectionClass->getMethod($action . 'Action');
+
+        // Parse attributes
+        $attributes = $reflectionMethod->getAttributes(\Frootbox\MVC\Controller\Attribute\PermissionRequest::class);
+
+        foreach ($attributes as $attribute) {
+
+            $permissionRequest = $attribute->newInstance();
+
+            if ($this->permissioNValidator !== null) {
+
+                if ($permissionRequest->hasAccessKey()) {
+                    if (!$this->permissioNValidator->validateAccessKey($permissionRequest->getAccessKey())) {
+                        throw new \Frootbox\Exceptions\AccessDenied();
+                    }
+                }
+            }
+        }
 
         // Check controller requirements
         $controllerCache = $this->getControllerCache($controller);
