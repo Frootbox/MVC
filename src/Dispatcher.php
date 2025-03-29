@@ -23,7 +23,7 @@ class Dispatcher
         protected ?string $namespace = null,
         protected ?string $cachepath = null,
         protected ?string $baseDir = null,
-        protected ?\Frootbox\MVC\Controller\Interface\PermissioNValidatorInterface $permissioNValidator = null, 
+        protected ?\Frootbox\MVC\Controller\Interface\PermissionValidatorInterface $permissionValidator = null,
     )
     {
         if (!empty($options['namespace'])) {
@@ -419,7 +419,7 @@ class Dispatcher
             if ($this->permissioNValidator !== null) {
 
                 if ($permissionRequest->hasAccessKey()) {
-                    if (!$this->permissioNValidator->validateAccessKey($permissionRequest->getAccessKey())) {
+                    if (!$this->permissionValidator->validateAccessKey($permissionRequest->getAccessKey())) {
                         throw new \Frootbox\Exceptions\AccessDenied();
                     }
                 }
@@ -439,7 +439,7 @@ class Dispatcher
             if ($this->permissioNValidator !== null) {
 
                 if ($permissionRequest->hasAccessKey()) {
-                    if (!$this->permissioNValidator->validateAccessKey($permissionRequest->getAccessKey())) {
+                    if (!$this->permissionValidator->validateAccessKey($permissionRequest->getAccessKey())) {
                         throw new \Frootbox\Exceptions\AccessDenied();
                     }
                 }
