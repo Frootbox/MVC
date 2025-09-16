@@ -56,6 +56,15 @@ class Translator {
     }
 
     /**
+     * @param string $key
+     * @return bool
+     */
+    public function keyExists(string $key): bool
+    {
+        return array_key_exists($key, $this->data[$this->languagePrimary]);
+    }
+
+    /**
      * @param array $data
      * @return void
      */
