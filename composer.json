@@ -2,7 +2,7 @@
     "name": "frootbox/mvc",
     "description": "Frootbox MVC Framework",
     "support": {
-        "docs": "",
+        "docs": "https://github.com/Frootbox/MVC",
         "email": "jan.habbo.bruening@gmail.com"
     },
     "authors": [
