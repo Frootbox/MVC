@@ -147,13 +147,16 @@ class View
         if (method_exists($partial, 'onBeforeRendering')) {
 
             try {
-                $xpayload = $this->container->call([ $partial, 'onBeforeRendering' ]);
 
-                if ($xpayload === null) {
+                // Call pre-renderer
+                $response = $this->container->call([ $partial, 'onBeforeRendering' ]);
+
+                if ($response === null) {
                     return (string) null;
                 }
 
-                $payload = array_merge($payload, $xpayload);
+                $responsePayload = $response instanceof \Frootbox\MVC\Response\ResponseInterface ? $response->getPayload() : $response;
+                $payload = array_merge($payload, $responsePayload);
             }
             catch ( \Exception $e ) {
                 return '<div class="message danger">' . $e->getMessage() . '</div>';
@@ -177,10 +180,10 @@ class View
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function render(string $viewfile, array $variables = null): string
+    public function render(string $viewFile, array $variables = null): string
     {
         $variables['view'] = $this;
 
-        return $this->twig->render(str_replace(CORE_DIR, '', $viewfile), $variables);
+        return $this->twig->render(str_replace(CORE_DIR, '', $viewFile), $variables);
     }
 }
