@@ -348,7 +348,7 @@ class Dispatcher
             }
 
             if (empty($controllerClass)) {
-                throw new \Frootbox\Exceptions\NotFound('Missing controller ' . $orgControllerClass);
+                throw new \Frootbox\MVC\Exception\ControllerNotFound('Missing controller ' . $orgControllerClass);
             }
         }
 
